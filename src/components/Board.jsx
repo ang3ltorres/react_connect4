@@ -7,6 +7,10 @@ export const Board = ( {width, height} ) => {
 	const [nextTurn, setNextTurn] = useState( (Math.round(Math.random()) == 1) ? 'red' : 'yellow' )
 
 	const getCell = (x, y) => {
+
+		if (x < 0 || x >= width || y < 0 || y >= height)
+			return null
+
 		return (y * width) + x
 	}
 
@@ -20,6 +24,7 @@ export const Board = ( {width, height} ) => {
 			Array.from({length: width}, (_, index) => {
 				return <CellColumn
 					key={index}
+					width={width}
 					height={height}
 					boardData={boardData}
 					setBoardData={setBoardData}

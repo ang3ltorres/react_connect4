@@ -4,3 +4,5 @@ export const COLORS = {
 	yellow: 'yellow',
 	board: 'blue'
 }
+
+export const TARGET = 4

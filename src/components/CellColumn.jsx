@@ -1,10 +1,125 @@
 import { useState } from "react";
 import { Cell } from './Cell'
 
-import { COLORS } from './misc'
+import { COLORS, TARGET } from './misc'
 import './CellColumn.css'
 
-export const CellColumn = ( {height, boardData, setBoardData, columnNumber, getCell, nextTurn, setNextTurn} ) => {
+export const CellColumn = ( {width, height, boardData, setBoardData, columnNumber, getCell, nextTurn, setNextTurn} ) => {
+
+	const getWinner = (board) => {
+
+
+		console.log('CHECKING WINNER')
+
+		// Check rows
+		for (let y = 0; y < height; y++) {
+
+			let type = board[getCell(0, y)]
+			let count = 0
+			
+			for (let x = 0; x < width; x++) {
+
+				let cell = board[getCell(x, y)]
+				
+				if (cell == 'empty') {
+					type = cell
+					count = 0
+				}
+				else if (cell != type) {
+					type = cell
+					count = 1
+				}
+				else
+					count++
+
+				if (count == TARGET) return cell
+			}
+		}
+
+		// Check columns
+		for (let x = 0; x < width; x++) {
+
+			let type = board[getCell(x, 0)]
+			let count = 0
+			
+			for (let y = 0; y < height; y++) {
+
+				let cell = board[getCell(x, y)]
+				
+				if (cell == 'empty') {
+					type = cell
+					count = 0
+				}
+				else if (cell != type) {
+					type = cell
+					count = 1
+				}
+				else
+					count++
+
+				if (count == TARGET) return cell
+			}
+		}
+
+		// Check cross lines
+		for (let i = 0; i < (width + height - 1); i++) {
+
+			const x = (i - (height - 1) >= 0) ? i - (height - 1) : 0;
+			const y = (i >= height) ? (height - 1) : i
+
+			let type = board[getCell(x, y)]
+			let count = 0
+
+			for (let pos = 0, cellIndex = null; (cellIndex = getCell(x + pos, y - pos)); pos++) {
+
+				let cell = board[cellIndex]
+				
+				if (cell == 'empty') {
+					type = cell
+					count = 0
+				}
+				else if (cell != type) {
+					type = cell
+					count = 1
+				}
+				else
+					count++
+
+				if (count == TARGET) return cell
+			}
+		}
+
+		for (let i = 0; i < (width + height - 1); i++) {
+
+			const x = (i < height) ? (width - 1) : (width - 1) - (i - (height - 1))
+			const y = (i >= height) ? (height - 1) : i
+
+			console.log( {x, y} )
+
+			let type = board[getCell(x, y)]
+			let count = 0
+
+			for (let pos = 0, cellIndex = null; (cellIndex = getCell(x - pos, y - pos)); pos++) {
+
+				let cell = board[cellIndex]
+				
+				if (cell == 'empty') {
+					type = cell
+					count = 0
+				}
+				else if (cell != type) {
+					type = cell
+					count = 1
+				}
+				else
+					count++
+
+				if (count == TARGET) return cell
+			}
+		}
+
+		return null
+	}
 
 	const columnClick = () => {
 		
@@ -20,6 +135,12 @@ export const CellColumn = ( {height, boardData, setBoardData, columnNumber, getC
 
 				// Change turn
 				setNextTurn( (nextTurn == 'red') ? 'yellow' : 'red' )
+
+				// Check winner
+				const winner = getWinner(newBoardData)
+				if (winner) {
+					console.log(winner)
+				}
 
 				return
 			}
