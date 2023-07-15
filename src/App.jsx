@@ -6,9 +6,7 @@ import './App.css'
 function App() {
 
 	return (
-		<React.Fragment>
-			<Board width={6} height={5}></Board>
-		</React.Fragment>
+		<Board width={7} height={6}></Board>
 	)
 }
 
